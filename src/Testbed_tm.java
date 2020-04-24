@@ -51,6 +51,7 @@ public class Testbed_tm {
 	private JLabel lblViewportXPos;
 	private JLabel lblCorners;
 	private Insets bounds;
+	private JLabel lblViewportPos; 
 	private ArrayList<RenderObj> testers;
 	/**
 	 * Launch the application.
@@ -101,7 +102,7 @@ public class Testbed_tm {
 		}
 		game_frame.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 		
-		gameFramer = new RenderEngine_tm(gamex, gamey, 16);
+		gameFramer = new RenderEngine_tm(gamex, gamey, 16, 2000);
 		
 		
 		formatter = new DecimalFormat("#.##");
@@ -140,7 +141,7 @@ public class Testbed_tm {
 		viewportPos.setBounds(967, 197, 631, 14);
 		gameFramer.add(viewportPos);
 		
-		JLabel lblViewportPos = new JLabel("Viewport Position: (" + gameFramer.getViewportX() + ", " + gameFramer.getViewportY() + ")");
+		lblViewportPos = new JLabel("Viewport Position: (" + gameFramer.getViewportX() + ", " + gameFramer.getViewportY() + ")");
 		lblViewportPos.setBounds(29, 51, 285, 22);
 		gameFramer.add(lblViewportPos);
 		
@@ -226,6 +227,7 @@ public class Testbed_tm {
 						cos = Math.cos(Math.toRadians(i));
 						sin = Math.sin(Math.toRadians(i));
 						
+						lblViewportPos.setText("Viewport Position: (" + gameFramer.getViewportX() + ", " + gameFramer.getViewportY() + ")");
 						entPosLabel.setText("Test pos: (" + formatter.format(tester.getXPosWorld()) + ", " + formatter.format(tester.getYPosWorld()) + ")"); 
 						centerLabel.setText("Ent renderPos: (" + formatter.format(tester2.getXPosRender(gameFramer.getViewportX())) + ", " +
 								formatter.format(tester2.getYPosRender(gameFramer.getViewportY())) + ")" +
@@ -271,7 +273,7 @@ public class Testbed_tm {
 	}
 
 	//testRender is special- it niavely assumes it has been given a one image sprite sheet. 
-	private class testRender extends RenderObj {
+	public class testRender extends RenderObj {
 		private double xRate;
 		private double yRate;
 		private long frameDelay;

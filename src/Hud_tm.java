@@ -36,6 +36,7 @@ public class HUD_tm extends JPanel {
 	private Main_tm gameRef;
 	private JButton trapA, trapB, trapC, trapD, btnSell, btnRepair;
 	private boolean buttonsActive;
+	private int trapACost, trapBCost, trapCCost, trapDCost;
 	
 	/**
 	 * Create the panel.
@@ -107,15 +108,19 @@ public class HUD_tm extends JPanel {
 		gbl_trapMenuPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0};
 		trapMenuPanel.setLayout(gbl_trapMenuPanel);
 		
+		trapACost = 500;
 		
-		
-		trapA = new JButton("Pit Trap");
+		trapA = new JButton("<html><center>Ballista <br/>($" + trapACost + ")</center></html>");
 		trapA.setBackground(new Color(169, 169, 169));
 		trapA.setSize(buttonSize);
 		trapA.setPreferredSize(buttonSize);
 		trapA.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				/**
+				 * This will be an actual thing some day, don't worry about it
+				 */
+				Trap_Ballista nuBallista = new Trap_Ballista(gameRef.getGameBoundary() - 100, gameRef.getGameBoundary() - 100, 0);
+				spawnObj(nuBallista, nuBallista.getTr_cost());
 			}
 		});
 		
@@ -126,8 +131,9 @@ public class HUD_tm extends JPanel {
 		gbc_trapA.gridy = 1;
 		trapMenuPanel.add(trapA, gbc_trapA);
 		
+		trapBCost = 850;
 		
-		trapB = new JButton("Wind Trap");
+		trapB = new JButton("<html><center>Wind Trap <br/>($" + trapBCost + ")</center></html>");
 		trapB.setBackground(new Color(245, 245, 245));
 		trapB.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -142,9 +148,9 @@ public class HUD_tm extends JPanel {
 		gbc_trapB.gridy = 1;
 		trapMenuPanel.add(trapB, gbc_trapB);
 		
+		trapCCost = 1500;
 		
-		
-		trapC = new JButton("Flame Thrower");
+		trapC = new JButton("<html><center>Flamethrower <br/>($" + trapCCost + ")</center></html>");
 		trapC.setBackground(new Color(255, 127, 80));
 		trapC.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -158,10 +164,10 @@ public class HUD_tm extends JPanel {
 		gbc_trapC.gridy = 2;
 		trapMenuPanel.add(trapC, gbc_trapC);
 		
+		trapDCost = 2000;
 		
 		
-		
-		trapD = new JButton("Freeze Rune");
+		trapD = new JButton("<html><center>Freeze Rune <br/>($" + trapDCost + ")</center></html>");
 		trapD.setBackground(new Color(135, 206, 235));
 		trapD.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -224,15 +230,18 @@ public class HUD_tm extends JPanel {
 	 * @param cost The amount of gold to be taken 
 	 */
 	public void spawnObj(RenderObj obj, int cost) {
-		gameRef.setMode(Main_tm.BUY_MODE, obj, cost);
+		gameRef.makePurchase(obj, Main_tm.TRAP, cost);
 	}
 	
 	/**
 	 * Turns all the buttons on or off- when off, they cannot be clicked. 
 	 */
 	public void toggleButtons() {
-		buttonsActive = !buttonsActive;
+		buttonsActive = !buttonsActive; 
 		trapA.setEnabled(buttonsActive);
+		trapB.setEnabled(buttonsActive);
+		trapC.setEnabled(buttonsActive);
+		trapD.setEnabled(buttonsActive);
 		btnRepair.setEnabled(buttonsActive);
 		btnSell.setEnabled(buttonsActive);
 	}
