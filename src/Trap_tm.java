@@ -16,16 +16,18 @@ import javax.imageio.ImageIO;
 
 public abstract class Trap_tm extends RenderObj{
 	
-	private int trap_count = 0;
+	static int trap_count = 0;
 	private int tr_maxHealth;			//Trap maximum health
 	private int tr_currentHealth;		//Trap current health
 	private int tr_range;				//Trap range
 	private int tr_damage;				//Trap damage
 	private int tr_cost;				//Trap cost
 	private int tr_cooldown;			//Trap cooldown/firerate
+	private int timer;					//Used to keep track of cooldown
 	private int tr_ID;					//numerical ID of the trap
 	private int facing;					//direction trap is facing. 0 = north, 1 = east, 2 = south, 3 = west
 	private Monster_tm target;			//The target of the trap
+	private ActionBox AOE;		//The tiles covered by this trap.
 	
 	/**
 	 * Abstract constructor. Just to make things easier for the actual trap classes.
@@ -34,6 +36,7 @@ public abstract class Trap_tm extends RenderObj{
 		this.setXPosWorld(xPos);
 		this.setYPosWorld(yPos);
 		this.setZPos(2);
+		this.timer = this.tr_cooldown;
 		this.facing = facing;
 		tr_ID = trap_count;
 		trap_count++;
@@ -90,7 +93,7 @@ public abstract class Trap_tm extends RenderObj{
 		if (facing >= 0 && facing < 4) {
 			this.facing = facing;
 		} else {
-			this.facing = 1;
+			this.facing = 0;
 			System.out.println("Unexceptable facing received. " + facing);
 		}
 	}
@@ -106,19 +109,37 @@ public abstract class Trap_tm extends RenderObj{
 	 * @param monsters The list of spawned monsters from Map_tm
 	 * @return The targeted monster
 	 */
-	public Monster_tm acquireTarget (ArrayList<Monster_tm> monsters) {
-		return null;
+	public boolean acquireTarget (ActionBox AOE) {
+		return false;
 	}
 	
 	/**
 	 * Checks if the traps target is still valid. If yes,
 	 * triggers an attack from the trap to its target.
 	 * If no, acquires a new target.
-	 * If no targets can be found, returns false.
-	 * Otherwise, returns true.
 	 */
-	public boolean tr_attack () {
-		return false;
+	public void tr_attack () {
+		if (this.timer == -1) {
+			if (acquireTarget(AOE)) {
+				//fire at target
+				this.timer = tr_cooldown;
+				this.setCurrSpriteRow(1);
+			} else {
+			}
+		} else if (this.timer == 0) {
+			if (acquireTarget(AOE)) {
+				//fire at target
+				this.timer = tr_cooldown;
+				this.setCurrSpriteRow(1);
+			} else {
+				this.timer = -1;
+			}
+		} else if (this.timer == (int)(tr_cooldown / 4)) {
+			this.setCurrSpriteRow(0);
+			this.timer = this.timer - 1;
+		} else {
+			this.timer = this.timer - 1;
+		}
 	}
 	
 	/**
